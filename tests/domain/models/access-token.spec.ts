@@ -5,4 +5,8 @@ describe('AccessToken', () => {
     const sut = new AccessToken('any_value');
     expect(sut).toEqual({ value: 'any_value' });
   });
+
+  test('Should expire in 1800000 ms', async () => {
+    expect(AccessToken.expirationInMiliseconds).toEqual(1800000);
+  });
 });
