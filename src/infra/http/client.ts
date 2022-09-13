@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface HttpClient {
-  get(parmas: HttpClient.Params): Promise<HttpClient.Result>;
+  get<T = any>(parmas: HttpClient.Params): Promise<T>;
 }
 
 export namespace HttpClient {
@@ -7,6 +8,4 @@ export namespace HttpClient {
     url: string;
     params: object;
   };
-
-  export type Result = any;
 }
