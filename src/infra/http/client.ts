@@ -1,5 +1,5 @@
 export interface HttpClient {
-  get(parmas: HttpClient.Params): Promise<void>;
+  get(parmas: HttpClient.Params): Promise<HttpClient.Result>;
 }
 
 export namespace HttpClient {
@@ -7,4 +7,6 @@ export namespace HttpClient {
     url: string;
     params: object;
   };
+
+  export type Result = any;
 }
