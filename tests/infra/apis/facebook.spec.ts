@@ -1,16 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended';
+
 import { FacebookApi } from '@/infra/apis';
-
-export interface HttpClient {
-  get(parmas: HttpClient.Params): Promise<void>;
-}
-
-export namespace HttpClient {
-  export type Params = {
-    url: string;
-    params: object;
-  };
-}
+import { HttpClient } from '@/infra/http';
 
 describe('FacebookApi', () => {
   let clientId: string;
