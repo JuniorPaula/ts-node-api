@@ -1,4 +1,4 @@
-import { AxiosHttpClient } from '@/http';
+import { AxiosHttpClient } from '@/infra/http';
 
 import axios from 'axios';
 

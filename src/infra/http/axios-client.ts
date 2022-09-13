@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HttpClient } from '@/infra/http';
+import { HttpClient } from './client';
 
 export class AxiosHttpClient {
   async get(args: HttpClient.Params): Promise<any> {
