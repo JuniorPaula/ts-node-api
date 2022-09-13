@@ -1,7 +1,7 @@
 import { LoadFacebookUserApi } from '@/data/interfaces/apis';
 import { HttpClient } from '@/infra/http';
 
-export class FacebookApi {
+export class FacebookApi implements LoadFacebookUserApi {
   private readonly baseUrl = 'https://graph.facebook.com';
   constructor(
     private readonly httpClient: HttpClient,
@@ -9,7 +9,9 @@ export class FacebookApi {
     private readonly clientSecret: string,
   ) {}
 
-  async loadUser(parmas: LoadFacebookUserApi.Params): Promise<void> {
+  async loadUser(
+    parmas: LoadFacebookUserApi.Params,
+  ): Promise<LoadFacebookUserApi.Result> {
     const appToken = await this.httpClient.get({
       url: `${this.baseUrl}/oauth/access_token`,
       params: {
@@ -27,12 +29,18 @@ export class FacebookApi {
       },
     });
 
-    await this.httpClient.get({
+    const userInfo = await this.httpClient.get({
       url: `${this.baseUrl}/oauth/${debugToken.data.user_id}`,
       params: {
         fields: ['id', 'name', 'email'].join(','),
         access_token: parmas.token,
       },
     });
+
+    return {
+      facebookId: userInfo.id,
+      name: userInfo.name,
+      email: userInfo.email,
+    };
   }
 }
