@@ -1,5 +1,10 @@
 module.exports = {
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/main/**',
+    '!<rootDir>/src/**/index.ts',
+  ],
+  setupFiles: ['dotenv/config'],
   coverageDirectory: 'coverage',
   moduleNameMapper: {
     '@/tests/(.+)': '<rootDir>/tests/$1',
