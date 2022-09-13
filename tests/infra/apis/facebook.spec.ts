@@ -1,4 +1,4 @@
-import { mock } from 'jest-mock-extended';
+import { mock, MockProxy } from 'jest-mock-extended';
 import { FacebookApi } from '@/infra/apis';
 
 export interface HttpClient {
@@ -13,12 +13,23 @@ export namespace HttpClient {
 }
 
 describe('FacebookApi', () => {
-  const clientId = 'any_client_id';
-  const clientSecret = 'any_client_secret';
-  test('Should get app token', async () => {
-    const httpClient = mock<HttpClient>();
-    const sut = new FacebookApi(httpClient, clientId, clientSecret);
+  let clientId: string;
+  let clientSecret: string;
+  let httpClient: MockProxy<HttpClient>;
+  let sut: FacebookApi;
 
+  beforeAll(() => {
+    clientId = 'any_client_id';
+    clientSecret = 'any_client_secret';
+
+    httpClient = mock();
+  });
+
+  beforeEach(() => {
+    sut = new FacebookApi(httpClient, clientId, clientSecret);
+  });
+
+  test('Should get app token', async () => {
     await sut.loadUser({ token: 'any_client_token' });
 
     expect(httpClient.get).toHaveBeenCalledWith({
