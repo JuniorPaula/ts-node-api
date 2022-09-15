@@ -10,6 +10,7 @@ describe('JwtTokenGenerator', () => {
 
   beforeAll(() => {
     fakeJwt = jwt as jest.Mocked<typeof jwt>;
+    fakeJwt.sign.mockImplementation(() => 'any_token');
   });
 
   beforeEach(() => {
@@ -26,5 +27,11 @@ describe('JwtTokenGenerator', () => {
         expiresIn: 1,
       },
     );
+  });
+
+  test('Should return a token', async () => {
+    const token = await sut.generateToken({ key: 'any_key', expireIn: 1000 });
+
+    expect(token).toEqual('any_token');
   });
 });
