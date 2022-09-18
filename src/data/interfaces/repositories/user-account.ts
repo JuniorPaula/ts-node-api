@@ -4,7 +4,7 @@ export interface LoadUserAccountRepository {
   ): Promise<LoadUserAccountRepository.Result>;
 }
 
-namespace LoadUserAccountRepository {
+export namespace LoadUserAccountRepository {
   export type Params = {
     email: string;
   };
@@ -23,7 +23,7 @@ export interface SaveFacebookAccountRepository {
   ): Promise<SaveFacebookAccountRepository.Result>;
 }
 
-namespace SaveFacebookAccountRepository {
+export namespace SaveFacebookAccountRepository {
   export type Params = {
     id?: string;
     name: string;
