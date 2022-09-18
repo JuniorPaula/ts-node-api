@@ -1,45 +1,19 @@
-import { LoadUserAccountRepository } from '@/data/interfaces/repositories';
+import { IBackup, IMemoryDb, newDb } from 'pg-mem';
+import { getConnection, getRepository, Repository } from 'typeorm';
 
-import { IBackup, newDb } from 'pg-mem';
-import {
-  Column,
-  Entity,
-  getConnection,
-  getRepository,
-  PrimaryGeneratedColumn,
-  Repository,
-} from 'typeorm';
+import { PgUserAccountRepository } from '@/infra/postgres/repositories';
+import { PgUser } from '@/infra/postgres/entities';
 
-class PgUserAccountRepository {
-  async load(
-    params: LoadUserAccountRepository.Params,
-  ): Promise<LoadUserAccountRepository.Result> {
-    const pgUserRepo = getRepository(PgUser);
-    const user = await pgUserRepo.findOne({ email: params.email });
-
-    if (user !== undefined) {
-      return {
-        id: user.id.toString(),
-        name: user.name ?? undefined,
-      };
-    }
-  }
-}
-
-@Entity({ name: 'usuarios' })
-export class PgUser {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column({ name: 'nome', nullable: true })
-  name?: string;
-
-  @Column()
-  email!: string;
-
-  @Column({ name: 'id_facebook', nullable: true })
-  facebookId?: number;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const makeFakeDb = async (entities?: any[]): Promise<IMemoryDb> => {
+  const db = newDb();
+  const connection = await db.adapters.createTypeormConnection({
+    type: 'postgres',
+    entities: entities ?? ['src/infra/postgres/entities/index.ts'],
+  });
+  await connection.synchronize();
+  return db;
+};
 
 describe('PgUserAccountRepository', () => {
   describe('load()', () => {
@@ -48,12 +22,7 @@ describe('PgUserAccountRepository', () => {
     let backup: IBackup;
 
     beforeAll(async () => {
-      const db = newDb();
-      const connection = await db.adapters.createTypeormConnection({
-        type: 'postgres',
-        entities: [PgUser],
-      });
-      await connection.synchronize();
+      const db = await makeFakeDb([PgUser]);
       backup = db.backup();
       pgUserRepo = getRepository(PgUser);
     });
