@@ -4,6 +4,7 @@ import { BadRequest } from '@/aplication/errors';
 import {
   badRequest,
   HttpResponse,
+  ok,
   serverError,
   unauthorized,
 } from '@/aplication/helpers';
@@ -28,12 +29,7 @@ export class FacebookLoginController {
       });
 
       if (accessToken instanceof AccessToken) {
-        return {
-          statusCode: 200,
-          body: {
-            accessToken: accessToken.value,
-          },
-        };
+        return ok({ accessToken: accessToken.value });
       } else {
         return unauthorized();
       }
