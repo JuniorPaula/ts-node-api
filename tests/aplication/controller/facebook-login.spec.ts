@@ -3,7 +3,7 @@ import { FacebookAuthentication } from '@/domain/features';
 import { AuthenticationError } from '@/domain/errors';
 import { AccessToken } from '@/domain/models';
 import { FacebookLoginController } from '@/aplication/controller/facebook-login';
-import { ServerError } from '@/aplication/errors';
+import { BadRequest, ServerError } from '@/aplication/errors';
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController;
@@ -24,7 +24,7 @@ describe('FacebookLoginController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new Error('The field token is required'),
+      body: new BadRequest('token'),
     });
   });
 
@@ -33,7 +33,7 @@ describe('FacebookLoginController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new Error('The field token is required'),
+      body: new BadRequest('token'),
     });
   });
 
@@ -42,7 +42,7 @@ describe('FacebookLoginController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      body: new Error('The field token is required'),
+      body: new BadRequest('token'),
     });
   });
 

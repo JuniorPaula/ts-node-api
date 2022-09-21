@@ -1,7 +1,7 @@
 import { FacebookAuthentication } from '@/domain/features';
 import { AccessToken } from '@/domain/models';
-import { ServerError } from '@/aplication/errors';
-import { HttpResponse } from '@/aplication/helpers';
+import { BadRequest, ServerError } from '@/aplication/errors';
+import { badRequest, HttpResponse } from '@/aplication/helpers';
 
 export class FacebookLoginController {
   constructor(
@@ -15,10 +15,7 @@ export class FacebookLoginController {
         httpRequest.token === null ||
         httpRequest.token === undefined
       ) {
-        return {
-          statusCode: 400,
-          body: new Error('The field token is required'),
-        };
+        return badRequest(new BadRequest('token'));
       }
 
       const result = await this.facebookAuthentication.perform({
