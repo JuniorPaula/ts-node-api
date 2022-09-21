@@ -9,12 +9,22 @@ import {
   unauthorized,
 } from '@/aplication/helpers';
 
+type HttpRequest = {
+  token: string | undefined | null;
+};
+
+type ModelResponse =
+  | Error
+  | {
+      accessToken: string;
+    };
+
 export class FacebookLoginController {
   constructor(
     private readonly facebookAuthentication: FacebookAuthentication,
   ) {}
 
-  async handle(httpRequest: any): Promise<HttpResponse> {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse<ModelResponse>> {
     try {
       if (
         httpRequest.token === '' ||
