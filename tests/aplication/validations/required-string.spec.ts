@@ -8,4 +8,11 @@ describe('RequiredStringValidation', () => {
 
     expect(error).toEqual(new RequiredField('any_field'));
   });
+
+  test('Should return RequiredField if value is null', async () => {
+    const sut = new RequiredStringValidation(null as any, 'any_field');
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredField('any_field'));
+  });
 });
