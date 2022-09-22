@@ -15,4 +15,11 @@ describe('RequiredStringValidation', () => {
 
     expect(error).toEqual(new RequiredField('any_field'));
   });
+
+  test('Should return RequiredField if value is undefined', async () => {
+    const sut = new RequiredStringValidation(undefined as any, 'any_field');
+    const error = sut.validate();
+
+    expect(error).toEqual(new RequiredField('any_field'));
+  });
 });
