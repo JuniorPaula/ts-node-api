@@ -6,6 +6,8 @@ export class RequiredStringValidation {
     private readonly fieldName: string,
   ) {}
   validate(): Error | undefined {
-    return new RequiredField('any_field');
+    if (this.value === '' || this.value === null || this.value === undefined) {
+      return new RequiredField('any_field');
+    }
   }
 }
