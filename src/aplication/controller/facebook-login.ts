@@ -1,6 +1,5 @@
 import { FacebookAuthentication } from '@/domain/features';
 import { AccessToken } from '@/domain/models';
-import { BadRequest } from '@/aplication/errors';
 import {
   badRequest,
   HttpResponse,
@@ -8,6 +7,7 @@ import {
   serverError,
   unauthorized,
 } from '@/aplication/helpers';
+import { RequiredStringValidation } from '../validations/required-string';
 
 type HttpRequest = {
   token: string;
@@ -46,12 +46,7 @@ export class FacebookLoginController {
   }
 
   private validate(httpRequest: HttpRequest): Error | undefined {
-    if (
-      httpRequest.token === '' ||
-      httpRequest.token === null ||
-      httpRequest.token === undefined
-    ) {
-      return new BadRequest('token');
-    }
+    const validator = new RequiredStringValidation(httpRequest.token, 'token');
+    return validator.validate();
   }
 }
