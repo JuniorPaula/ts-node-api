@@ -3,11 +3,8 @@ import { FacebookAuthentication } from '@/domain/features';
 import { AuthenticationError } from '@/domain/errors';
 import { AccessToken } from '@/domain/models';
 import { FacebookLoginController } from '@/aplication/controller/facebook-login';
-import { ServerError, Unauthorized } from '@/aplication/errors';
+import { Unauthorized } from '@/aplication/errors';
 import { RequiredStringValidation } from '@/aplication/validations';
-import { ValidationComposite } from '@/aplication/validations';
-
-jest.mock('@/aplication/validations/composite');
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController;
@@ -25,24 +22,12 @@ describe('FacebookLoginController', () => {
     sut = new FacebookLoginController(facebookAuth);
   });
 
-  test('Should return 400 if token is empty', async () => {
-    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
-      validate: jest.fn().mockReturnValueOnce(new Error('validation_error')),
-    }));
+  test('Should build validators correctly', async () => {
+    const validators = await sut.buildValidators({ token });
 
-    jest
-      .mocked(ValidationComposite)
-      .mockImplementationOnce(ValidationCompositeSpy);
-
-    const httpResponse = await sut.handle({ token });
-
-    expect(ValidationComposite).toHaveBeenCalledWith([
+    expect(validators).toEqual([
       new RequiredStringValidation('any_token', 'token'),
     ]);
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      body: new Error('validation_error'),
-    });
   });
 
   test('Should call FacebookAuthentication with correct params', async () => {
@@ -70,17 +55,6 @@ describe('FacebookLoginController', () => {
       body: {
         accessToken: 'any_value',
       },
-    });
-  });
-
-  test('Should return 500 if authentication throws', async () => {
-    const error = new Error('infra_error');
-    facebookAuth.perform.mockRejectedValueOnce(error);
-    const httpResponse = await sut.handle({ token });
-
-    expect(httpResponse).toEqual({
-      statusCode: 500,
-      body: new ServerError(error),
     });
   });
 });
